@@ -14,21 +14,30 @@ You'll need to install [boot2docker](http://boot2docker.io/) if you're using OS 
 ### Running it
 
 This container has 3 environment variables
-* SSL_KEY_PATH - A path to an SSL key
-* SSL_CRT_PATH - A path to an SSL Certificate (can be a pem of your certificate and intermediaries).
-* UPSTREAM - A host and port without protocal (for example `192.0.2.64:3000`)
+* `SSL_KEY_PATH` - A path to an SSL key
+* `SSL_CRT_PATH` - A path to an SSL Certificate (can be a pem of your certificate and intermediaries).
+* `UPSTREAM` - A host and port without protocol (for example `192.0.2.64:3000`)
 
-It doesn't provide any SSL certificates, so you'll need those to be mounted from a volume.
+If ```SSL_KEY_PATH``` or ```SSL_CRT_PATH``` are missing it will generate a self signed SSL certificate.
 
 You might run it something like this
 
 ```shell
 docker run \
       --name ssl-term \
-      -v /my/secrets:/certs 
-      -e  SSL_KEY_PATH=/certs/example.key
-      -e  SSL_CRT_PATH=/certs/example.crt
-      -e  UPSTREAM=www.google.com
+      -v /my/secrets:/certs \
+      -e  SSL_KEY_PATH=/certs/example.key \
+      -e  SSL_CRT_PATH=/certs/example.crt \
+      -e  UPSTREAM=www.google.com \
+      purplebooth/nginx-ssl-terminator
+```
+
+Or like this to generate a self signed certificate
+
+```shell
+docker run \
+      --name ssl-term \
+      -e  UPSTREAM=www.google.com \
       purplebooth/nginx-ssl-terminator
 ```
 
